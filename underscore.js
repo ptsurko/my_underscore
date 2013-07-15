@@ -4,14 +4,15 @@
 //     Underscore may be freely distributed under the MIT license.
 
 (function() {
-    var objectProto = Object.prototype;
+    var objectProto = Object.prototype,
+        arrayProto = Array.prototype;
 
     this._ = {};
 
 
     //TODO: rewrite later with more convenient array helpers
     (function() {
-        var types = ['Number', 'Array', 'Date', 'Function', 'Boolean', 'RegExp', 'String', 'Object'];
+        var types = ['Number', 'Array', 'Date', 'Boolean', 'RegExp', 'String'];
         for(var i = 0; i < types.length; i++) {
             _['is' + types[i]] = (function(typeName) {
                     return function(object) {
@@ -20,6 +21,14 @@
                 }(types[i]));
         }
     }());
+
+    _.isObject = function(object) {
+        return object === Object(object); //TODO:???
+    }
+
+    _.isFunction = function(object) {
+        return typeof(object) == 'function';
+    }
 
     _.isNull = function(object) {
         return object === null;
@@ -34,11 +43,12 @@
     }
 
     _.isEmpty = function(object) {
-        if(object) {
-            for(var prop in object) {
-                if(object.hasOwnProperty(prop)) {
-                    return false;
-                }
+        if(!object) return true;
+        if(_.isArray(object) || _.isString(object))
+            return object.length === 0;
+        for(var prop in object) {
+            if(_.has(object, prop)) {
+                return false;
             }
         }
         return true;
@@ -70,7 +80,7 @@
 
     _.defaults = function(object) {
         if(_.isObject(object)) {
-            var args = Array.prototype.slice.call(arguments);
+            var args = arrayProto.slice.call(arguments);
             args.unshift();
             for(var i = 0; i < args.length; i++) {
                 if(_.isObject(args[i])) {
@@ -95,6 +105,54 @@
             res.sort();
             return res;
         }
+    }
+
+    _.keys = function(object) {
+        if(_.isObject(object)) {
+            var res = [];
+            for(var prop in object) {
+                res.push(prop);
+            }
+
+            return res;
+        }
+        throw new TypeError();
+    }
+
+    _.values = function(object) {
+        if(_.isObject(object)) {
+            var res = [];
+            for(var prop in object) {
+                res.push(object[prop]);
+            }
+
+            return res;
+        }
+        throw new TypeError();
+    }
+
+    _.pairs = function(object) {
+        if(_.isObject(object)) {
+            var res = [];
+            for(var prop in object) {
+                res.push([prop, object[prop]]);
+            }
+
+            return res;
+        }
+        throw new TypeError();
+    }
+
+    _.invert = function(object) {
+        if(_.isObject(object)) {
+            var res = {};
+            for(var prop in object) {
+                res[object[prop]] = prop;
+            }
+
+            return res;
+        }
+        throw new TypeError();
     }
 
 }).call(this);
