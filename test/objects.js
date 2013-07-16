@@ -37,7 +37,6 @@ $(document).ready(function() {
     var obj = {a : 'dash', b : _.map, c : (/yo/), d : _.reduce};
     //TODO: fix
     //ok(_.isEqual(['b', 'd'], _.functions(obj)), 'can grab the function names of any passed-in object');
-
     var Animal = function(){};
     Animal.prototype.run = function(){};
     equal(_.functions(new Animal).join(''), 'run', 'also looks up functions on the prototype');
@@ -294,72 +293,73 @@ $(document).ready(function() {
     ok(!_.isEqual({value: 1}, new First), "Object instances and objects sharing equivalent properties are not equal");
     ok(!_.isEqual({value: 2}, new Second), "The prototype chain of objects should not be examined");
 
-	//TODO: fix
-    //// Circular Arrays.
-    //(a = []).push(a);
-    //(b = []).push(b);
-    //ok(_.isEqual(a, b), "Arrays containing circular references are equal");
-    //a.push(new String("Larry"));
-    //b.push(new String("Larry"));
-    //ok(_.isEqual(a, b), "Arrays containing circular references and equivalent properties are equal");
-    //a.push("Shemp");
-    //b.push("Curly");
-    //ok(!_.isEqual(a, b), "Arrays containing circular references and different properties are not equal");
+	// Circular Arrays.
+    (a = []).push(a);
+    (b = []).push(b);
+    ok(_.isEqual(a, b), "Arrays containing circular references are equal");
+    a.push(new String("Larry"));
+    b.push(new String("Larry"));
+    ok(_.isEqual(a, b), "Arrays containing circular references and equivalent properties are equal");
+    a.push("Shemp");
+    b.push("Curly");
+    ok(!_.isEqual(a, b), "Arrays containing circular references and different properties are not equal");
 
-    //// More circular arrays #767.
-    //a = ["everything is checked but", "this", "is not"];
-    //a[1] = a;
-    //b = ["everything is checked but", ["this", "array"], "is not"];
-    //ok(!_.isEqual(a, b), "Comparison of circular references with non-circular references are not equal");
+    // More circular arrays #767.
+    a = ["everything is checked but", "this", "is not"];
+    a[1] = a;
+    b = ["everything is checked but", ["this", "array"], "is not"];
+    ok(!_.isEqual(a, b), "Comparison of circular references with non-circular references are not equal");
 
-    //// Circular Objects.
-    //a = {abc: null};
-    //b = {abc: null};
-    //a.abc = a;
-    //b.abc = b;
-    //ok(_.isEqual(a, b), "Objects containing circular references are equal");
-    //a.def = 75;
-    //b.def = 75;
-    //ok(_.isEqual(a, b), "Objects containing circular references and equivalent properties are equal");
-    //a.def = new Number(75);
-    //b.def = new Number(63);
-    //ok(!_.isEqual(a, b), "Objects containing circular references and different properties are not equal");
+    // Circular Objects.
+    a = {abc: null};
+    b = {abc: null};
+    a.abc = a;
+    b.abc = b;
+    ok(_.isEqual(a, b), "Objects containing circular references are equal");
+    a.def = 75;
+    b.def = 75;
+    ok(_.isEqual(a, b), "Objects containing circular references and equivalent properties are equal");
+    a.def = new Number(75);
+    b.def = new Number(63);
+    ok(!_.isEqual(a, b), "Objects containing circular references and different properties are not equal");
 
-    //// More circular objects #767.
-    //a = {everything: "is checked", but: "this", is: "not"};
-    //a.but = a;
-    //b = {everything: "is checked", but: {that:"object"}, is: "not"};
-    //ok(!_.isEqual(a, b), "Comparison of circular references with non-circular object references are not equal");
+    // More circular objects #767.
+    a = {everything: "is checked", but: "this", is: "not"};
+    a.but = a;
+    b = {everything: "is checked", but: {that:"object"}, is: "not"};
+    ok(!_.isEqual(a, b), "Comparison of circular references with non-circular object references are not equal");
 
-    //// Cyclic Structures.
-    //a = [{abc: null}];
-    //b = [{abc: null}];
-    //(a[0].abc = a).push(a);
-    //(b[0].abc = b).push(b);
-    //ok(_.isEqual(a, b), "Cyclic structures are equal");
-    //a[0].def = "Larry";
-    //b[0].def = "Larry";
-    //ok(_.isEqual(a, b), "Cyclic structures containing equivalent properties are equal");
-    //a[0].def = new String("Larry");
-    //b[0].def = new String("Curly");
-    //ok(!_.isEqual(a, b), "Cyclic structures containing different properties are not equal");
+    // Cyclic Structures.
+    a = [{abc: null}];
+    b = [{abc: null}];
+    (a[0].abc = a).push(a);
+    (b[0].abc = b).push(b);
+    ok(_.isEqual(a, b), "Cyclic structures are equal");
+    a[0].def = "Larry";
+    b[0].def = "Larry";
+    ok(_.isEqual(a, b), "Cyclic structures containing equivalent properties are equal");
+    a[0].def = new String("Larry");
+    b[0].def = new String("Curly");
+    ok(!_.isEqual(a, b), "Cyclic structures containing different properties are not equal");
 
-    //// Complex Circular References.
-    //a = {foo: {b: {foo: {c: {foo: null}}}}};
-    //b = {foo: {b: {foo: {c: {foo: null}}}}};
-    //a.foo.b.foo.c.foo = a;
-    //b.foo.b.foo.c.foo = b;
-    //ok(_.isEqual(a, b), "Cyclic structures with nested and identically-named properties are equal");
+    // Complex Circular References.
+    a = {foo: {b: {foo: {c: {foo: null}}}}};
+    b = {foo: {b: {foo: {c: {foo: null}}}}};
+    a.foo.b.foo.c.foo = a;
+    b.foo.b.foo.c.foo = b;
+    ok(_.isEqual(a, b), "Cyclic structures with nested and identically-named properties are equal");
 
-    //// Chaining.
+    // Chaining.
+    //TODO: fix
     //ok(!_.isEqual(_({x: 1, y: undefined}).chain(), _({x: 1, z: 2}).chain()), 'Chained objects containing different values are not equal');
 
     //a = _({x: 1, y: 2}).chain();
     //b = _({x: 1, y: 2}).chain();
     //equal(_.isEqual(a.isEqual(b), _(true)), true, '`isEqual` can be chained');
 
-    //// Objects from another frame.
-    //ok(_.isEqual({}, iObject));
+    // Objects from another frame.
+    //TODO: fix
+    //ok(_.isEqual({}, iObject), "Object from another frame");
   });
 
   test("isEmpty", function() {
