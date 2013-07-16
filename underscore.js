@@ -7,7 +7,14 @@
     var objectProto = Object.prototype,
         arrayProto = Array.prototype;
 
-    this._ = {};
+    var busyUnderscore = this._;
+
+    this._ = function(object){
+        if(_.isArray(object)) {
+            return null;
+        }
+        return object;
+    };
 
 
     //TODO: rewrite later with more convenient array helpers
@@ -24,23 +31,23 @@
 
     _.isObject = function(object) {
         return object === Object(object); //TODO:???
-    }
+    };
 
     _.isFunction = function(object) {
         return typeof(object) == 'function';
-    }
+    };
 
     _.isNull = function(object) {
         return object === null;
-    }
+    };
 
     _.isUndefined = function(object) {
         return object === undefined;
-    }
+    };
 
     _.isNaN = function(object) {
         return !!(_.isNumber(object) && object != +object);
-    }
+    };
 
     _.isEmpty = function(object) {
         if(!object) return true;
@@ -52,11 +59,15 @@
             }
         }
         return true;
+    };
+
+    _.isElement = function(object) {
+        return !!(object.nodeName);
     }
 
     _.has = function(object, key) {
         return objectProto.hasOwnProperty.call(object, key);
-    }
+    };
 
     _.clone = function(object) {
         if(!_.isObject(object)) {
@@ -68,15 +79,15 @@
             result[prop] = object[prop];
         }
         return result;
-    }
+    };
 
     _.isArguments = function(object) {
         return !!(object && _.has(object, 'callee'));
-    }
+    };
 
     _.isFinite = function(object) {
         return !_.isNaN(parseFloat(object)) && isFinite(object);
-    }
+    };
 
     _.defaults = function(object) {
         if(_.isObject(object)) {
@@ -92,7 +103,7 @@
                 }
             }
         }
-    }
+    };
 
     _.functions = function(object) {
         if(_.isObject(object)) {
@@ -105,7 +116,7 @@
             res.sort();
             return res;
         }
-    }
+    };
 
     _.keys = function(object) {
         if(_.isObject(object)) {
@@ -117,7 +128,7 @@
             return res;
         }
         throw new TypeError();
-    }
+    };
 
     _.values = function(object) {
         if(_.isObject(object)) {
@@ -129,7 +140,7 @@
             return res;
         }
         throw new TypeError();
-    }
+    };
 
     _.pairs = function(object) {
         if(_.isObject(object)) {
@@ -141,9 +152,10 @@
             return res;
         }
         throw new TypeError();
-    }
+    };
 
     _.invert = function(object) {
+
         if(_.isObject(object)) {
             var res = {};
             for(var prop in object) {
@@ -153,6 +165,57 @@
             return res;
         }
         throw new TypeError();
+    };
+
+    _.pick = function(object) {
+        if(_.isObject(object)) {
+            var args = arrayProto.slice.call(arguments);
+            args.unshift();
+            var res = {};
+            for(var prop in object) {
+                if(args.indexOf(prop) >= 0) {
+                    res[object[prop]] = prop;
+                }
+            }
+
+            return res;
+        }
+        throw new TypeError();
+    };
+
+    _.omit = function(object) {
+        if(_.isObject(object)) {
+            var args = arrayProto.slice.call(arguments);
+            args.unshift();
+            var res = {};
+            for(var prop in object) {
+                if(!(args.indexOf(prop) >= 0)) {
+                    res[object[prop]] = prop;
+                }
+            }
+
+            return res;
+        }
+        throw new TypeError();
+    };
+
+    _.isEqual = function(object, other) {
+
+    };
+
+    _.tap = function(object, intercepter) {
+
+    };
+
+
+
+
+
+
+    _.noConflict = function() {
+        var und = _;
+        window._ = busyUnderscore;
+        return _;
     }
 
 }).call(this);
