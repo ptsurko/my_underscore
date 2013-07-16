@@ -197,7 +197,6 @@
         throw new TypeError();
     };
 
-
     function internalEqual(a, b, aStack, bStack) {
         if (a === b) return a !== 0 || 1 / a == 1 / b; // -0 === 0 => (-0 and 0 => -Infinity and Infinity)
         var className = objectProto.toString.call(a).slice(8, -1);

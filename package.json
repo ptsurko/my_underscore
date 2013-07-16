@@ -1,17 +1,31 @@
 {
-  "name"          : "underscore",
-  "description"   : "JavaScript's functional programming helper library.",
-  "homepage"      : "http://underscorejs.org",
-  "keywords"      : ["util", "functional", "server", "client", "browser"],
-  "author"        : "Jeremy Ashkenas <jeremy@documentcloud.org>",
-  "repository"    : {"type": "git", "url": "git://github.com/jashkenas/underscore.git"},
-  "main"          : "underscore.js",
-  "version"       : "1.5.1",
+  "name": "underscore",
+  "description": "JavaScript's functional programming helper library.",
+  "homepage": "http://underscorejs.org",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "Jeremy Ashkenas <jeremy@documentcloud.org>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jashkenas/underscore.git"
+  },
+  "main": "underscore.js",
+  "version": "1.5.1",
   "devDependencies": {
-    "phantomjs": "1.9.0-1"
+    "phantomjs": "1.9.0-1",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-concat": "~0.3.0"
   },
   "scripts": {
     "test": "phantomjs test/vendor/runner.js test/index.html?noglobals=true"
   },
-  "license"       : "MIT"
+  "license": "MIT"
 }
