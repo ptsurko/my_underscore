@@ -1,15 +1,4 @@
-
-var objectProto = Object.prototype,
-        arrayProto = Array.prototype;
-
-var busyUnderscore = this._;
-
-this._ = function (object) {
-	if (_.isArray(object)) {
-		return null;
-	}
-	return object;
-};;
+﻿
 
 //TODO: rewrite later with more convenient array helpers
 (function () {
@@ -269,8 +258,4 @@ _.extend = function (result) {
 		}
 	}
 	return result;
-};;_.noConflict = function () {
-	var temp = _;
-	window._ = busyUnderscore;
-	return temp;
 };
