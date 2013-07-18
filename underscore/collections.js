@@ -39,18 +39,18 @@ _.map = _.collect = function (list, iterator, context) {
     }
 };
 
-
 //15.4.4.21   Array.prototype.reduce ( callbackfn [ , initialValue ] )
 _.reduce = _.foldl = _.inject = function(list, iterator, memo, context) {
     if (!_.isObject(list) || !_.isFunction(iterator)) {
         throw new TypeError();
     }
 
+    var hasInitialValue = arguments.length > 2;
     if (_.isFunction(nativeReduce) && list.reduce === nativeReduce) {
         if (context) iterator = _.bind(iterator, context);
-        return memo ? nativeReduce.call(list, iterator, memo) : nativeReduce.call(list, iterator);
+        return hasInitialValue ? nativeReduce.call(list, iterator, memo) : nativeReduce.call(list, iterator);
     }
-    var hasInitialValue = arguments.length > 2;
+
     var result = memo, hasValues = false;
     _.each(list, function (value, key) {
         if (hasInitialValue) {
@@ -65,18 +65,18 @@ _.reduce = _.foldl = _.inject = function(list, iterator, memo, context) {
     return result;
 };
 
-
 //15.4.4.22   Array.prototype.reduceRight ( callbackfn [ , initialValue ] )
 _.reduceRight = _.foldr = function(list, iterator, memo, context) {
     if (!_.isObject(list) || !_.isFunction(iterator)) {
         throw new TypeError();
     }
 
+    var hasInitialValue = arguments.length > 2;
+
     if (_.isFunction(nativeReduceRight) && list.reduceRight === nativeReduceRight) {
         if (context) iterator = _.bind(iterator, context);
-        return memo ? nativeReduceRight.call(list, iterator, memo) : nativeReduceRight.call(list, iterator);
+        return hasInitialValue ? nativeReduceRight.call(list, iterator, memo) : nativeReduceRight.call(list, iterator);
     }
-    var hasInitialValue = arguments.length > 2;
     var result = memo, hasValues = false;
     if (_.isArray(list)) {
         for (var i = list.length - 1; i >= 0; i--) {
@@ -111,26 +111,93 @@ _.find = _.detect = function(list, iterator, context) {
 
 //15.4.4.17   Array.prototype.some ( callbackfn [ , thisArg ] )
 _.some = _.any = function(list, iterator, context) {
-    if (!_.isObject(list) || !_.isFunction(iterator)) {
+    if (!_.isObject(list)) {
         throw new TypeError();
     }
-
+    
     if (nativeSome && list.some === nativeSome) {
         return list.some(iterator, context);
     }
 
+    if (!_.isFunction(iterator)) iterator = _.identity;
+    
     if (_.isArray(list)) {
         for (var i = 0; i < list.length; i++) {
-            if (iterator.call(context, list[i], i, list) === breaker)
+            if (iterator.call(context, list[i], i, list))
                 return true;
         }
     } else {
         for (var key in list) {
             if (_.has(list, key)) {
-                if (iterator(list[key], key, list) === breaker)
+                if (iterator(list[key], key, list))
                     return true;
             }
         }
     }
     return false;
 };
+
+//15.4.4.20   Array.prototype.filter ( callbackfn [ , thisArg ] )
+_.filter = _.select = function(list, iterator, context) {
+    if (!_.isObject(list) || !_.isFunction(iterator)) {
+        throw new TypeError();
+    }
+    
+    if (nativeFilter && list.filter === nativeFilter) {
+        return list.filter(iterator, context);
+    }
+
+    var result = [];
+    _.each(list, function(value) {
+        if (iterator.apply(context, arguments)) {
+            result.push(value);
+        }
+    }, context);
+    return result;
+};
+
+_.reject = function (list, iterator, context) {
+    return _.filter(list, function() {
+        return !iterator.apply(context, arguments);
+    }, context);
+};
+
+_.every = _.all = function(list, iterator, context) {
+    if (!_.isObject(list) || !_.isFunction(iterator)) {
+        throw new TypeError();
+    }
+
+    if (nativeEvery && list.every === nativeEvery) {
+        return list.every(iterator, context);
+    }
+
+    return !_.some(list, iterator, context);
+};
+
+_.contains = _.include = function(list, value) {
+    if (!_.isObject(list)) {
+        throw new TypeError();
+    }
+    
+    if (_.isArray(list)) {
+        return list.indexOf(value) >= 0;
+    }
+    return _.any(list, function(val) { return val === value; });
+};
+
+_.invoke = function(list, func) {
+
+};
+
+_.pluck = function() {
+
+};
+
+_.max = function() {
+
+};
+
+_.min = function() {
+
+};
+
