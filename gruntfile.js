@@ -3,6 +3,7 @@ module.exports = function (grunt) {
 	// Load the plugin that provides the "uglify" task.
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 
 	// Project configuration.
 	grunt.initConfig({
@@ -18,15 +19,20 @@ module.exports = function (grunt) {
 		},
 		concat: {
 			options: {
-				separator: ';'
+				//separator: ';'
 			},
 			build: {
 				src: 'underscore/**/*.js',
 				dest: 'build/<%= pkg.name %>.js',
 			}
+		},
+		jshint: {
+			build: {
+				src: ['build/<%= pkg.name %>.js']
+			}
 		}
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['concat', 'uglify']);
+	grunt.registerTask('default', ['concat', 'uglify', 'jshint']);
 };
