@@ -1,6 +1,9 @@
 ﻿
 var objectProto = Object.prototype,
-        arrayProto = Array.prototype;
+    arrayProto = Array.prototype,
+    funcProto = Function.prototype;
+
+var nativeBind = Function.prototype.bind;
 
 var busyUnderscore = this._;
 

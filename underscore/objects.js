@@ -7,7 +7,7 @@
 		_['is' + types[i]] = (function (typeName) {
 			return function (object) {
 				return objectProto.toString.call(object) == '[object ' + typeName + ']';
-			}
+			};
 		}(types[i]));
 	}
 }());
@@ -171,7 +171,7 @@ _.omit = function (object) {
 		var args = arrayProto.concat.apply([], arrayProto.slice.call(arguments, 1));
 		var res = {};
 		for (var prop in object) {
-			if (!(args.indexOf(prop) >= 0)) {
+			if (args.indexOf(prop) == -1) {
 				res[prop] = object[prop];
 			}
 		}
@@ -225,15 +225,15 @@ function internalEqual(a, b, aStack, bStack) {
 			return false;
 		}
 
-		for (var i = 0; i < aKeys.length; i++) {
-			var key = aKeys[i];
+		for (var j = 0; j < aKeys.length; j++) {
+			var key = aKeys[j];
 			if (bKeys.indexOf(key) == -1 || !internalEqual(a[key], b[key], aStack, bStack))
 				return false;
 		}
 
 		return true;
 	}
-};
+}
 
 _.isEqual = function (a, b) {
 	return internalEqual(a, b, [], []);
