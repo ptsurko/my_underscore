@@ -98,7 +98,6 @@ $(document).ready(function() {
 
     var list = _.foldr(["foo", "bar", "baz"], function(memo, str){ return memo + str; }, '');
     equal(list, 'bazbarfoo', 'aliased as "foldr"');
-      debugger;
     var list = _.foldr(["foo", "bar", "baz"], function(memo, str){ return memo + str; });
     equal(list, 'bazbarfoo', 'default initial value');
 

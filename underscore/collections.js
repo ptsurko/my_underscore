@@ -156,6 +156,24 @@ _.filter = _.select = function(list, iterator, context) {
     return result;
 };
 
+_.where = function(list, properties, first) {
+    if (_.isEmpty(list)) { return first ? undefined : []; }
+
+    var key, selector = function(value) {
+        for(key in properties) {
+            if(!_.isEqual(value[key], properties[key])) {
+                return false;
+            }
+        }
+        return true;
+    };
+    return first ? _.find(list, selector) : _.filter(list, selector);
+};
+
+_.findWhere = function(list, properties) {
+    return _.where(list, properties, true);
+}
+
 _.reject = function (list, iterator, context) {
     return _.filter(list, function() {
         return !iterator.apply(context, arguments);
@@ -186,18 +204,66 @@ _.contains = _.include = function(list, value) {
 };
 
 _.invoke = function(list, func) {
+    if (!_.isObject(list)) {
+        throw new TypeError();
+    }
 
+    var isFunc = false;
+    if(!(isFunc = _.isFunction(func)) && !_.isString(func)) {
+        throw new TypeError();
+    }
+
+    var args = arrayProto.slice(arguments, 2);
+    var result = [];
+    _.each(list, function(value) {
+        result.push(isFunc ? func.apply(value, args) : value[func].apply(value, args));
+    });
+    return result;
 };
 
-_.pluck = function() {
+_.pluck = function(list, propertyName) {
+    if (!_.isObject(list)) {
+        throw new TypeError();
+    }
 
+    return _.map(list, function(value) {
+        return value[propertyName];
+    })
 };
 
-_.max = function() {
+_.max = function(list, iterator, context) {
+    if(_.isEmpty(list)) {
+        return -Infinity; //why?
+    }
 
+    if(_.isArray(list) && arguments.length == 1 && list.length > 0 && list[0] === +list[0]) {
+        return Math.max.apply(Math, list);
+    }
+
+    var max = -Infinity, iterator = iterator || _.identity;
+    _.each(list, function(value) {
+        if(iterator.call(context, value) > max) {
+            max = value;
+        }
+    });
+    return max;
 };
 
-_.min = function() {
+_.min = function(list, iterator, context) {
+    if(_.isEmpty(list)) {
+        return Infinity; //why?
+    }
 
+    if(_.isArray(list) && arguments.length == 1 && list.length > 0 && list[0] === +list[0]) {
+        return Math.min.apply(Math, list);
+    }
+
+    var min = Infinity, iterator = iterator || _.identity;
+    _.each(list, function(value) {
+        if(iterator.call(context, value) < min) {
+            min = value;
+        }
+    });
+    return min;
 };
 
