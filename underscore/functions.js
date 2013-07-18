@@ -8,7 +8,7 @@ _.bind = function (func, object) {
     //    }
 
     var args = arrayProto.slice.call(arguments, 2);
-    return function () {
+    return resultFunc = function () {
         if (!(this instanceof resultFunc)) {
             return func.apply(object, args.concat(arrayProto.slice.call(arguments)));
         }
