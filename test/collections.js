@@ -465,6 +465,7 @@ $(document).ready(function() {
     equal(_.size(new String('hello')), 5, 'can compute the size of string object');
 
     equal(_.size(null), 0, 'handles nulls');
+    equal(_.size(undefined), 0, 'handles undefineds');
   });
 
 });
