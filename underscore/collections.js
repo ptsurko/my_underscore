@@ -188,7 +188,7 @@ _.every = _.all = function(list, iterator, context) {
     if (nativeEvery && list.every === nativeEvery) {
         return list.every(iterator, context);
     }
-
+    
     return !_.some(list, iterator, context);
 };
 
@@ -208,7 +208,7 @@ _.invoke = function(list, func) {
         throw new TypeError();
     }
 
-    var isFunc = false;
+    var isFunc;
     if(!(isFunc = _.isFunction(func)) && !_.isString(func)) {
         throw new TypeError();
     }
@@ -267,3 +267,47 @@ _.min = function(list, iterator, context) {
     return min;
 };
 
+_.sortBy = function(list, iterator, context) {
+
+};
+
+_.groupBy = function (list, iterator, context) {
+    iterator = arguments.length > 1 ? iterator : _.identity;
+    var isFunc = _.isFunction(iterator);
+
+    var result = {};
+    _.each(list, function(value, key) {
+        var res = isFunc ? iterator.call(context, value, key, list) : value[iterator];
+        if (!_.has(result, res)) {
+            result[res] = [];
+        }
+        result[res].push(value);
+    });
+    return result;
+};
+
+_.countBy = function(list, iterator, context) {
+
+};
+
+_.shuffle = function(list) {
+
+};
+
+_.toArray = function(list) {
+
+};
+
+_.size = function(list) {
+    if (list == null) {
+        return 0;
+    } else if (list.length === +list.length) {
+        return list.length;
+    }
+
+    var result = 0;
+    _.each(list, function() {
+        result++;
+    });
+    return result;
+};
