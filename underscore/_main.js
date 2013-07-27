@@ -15,11 +15,14 @@ var nativeBind = Function.prototype.bind,
 
 var busyUnderscore = this._;
 
-this._ = function (object) {
-    if (_.isArray(object)) {
-        return null;
+function _(object) {
+    if (object instanceof _) {
+        return object;
+    } else if(this.constructor === _) {
+        this.wrappedObject = object;
+    } else {
+        return new _(object);
     }
-    return object;
 };
 
 _.identity = function(object) {

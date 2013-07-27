@@ -12,8 +12,8 @@
 	}
 }());
 
-_.isObject = function (object) {
-	return object === Object(object); //TODO:???
+_.isObject = function (obj) {
+	return obj === Object(obj); //TODO:???
 };
 
 _.isFunction = function (object) {

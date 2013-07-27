@@ -3,13 +3,13 @@ var breaker = {};
 
 //15.4.4.18   Array.prototype.forEach ( callbackfn [ , thisArg ] )
 _.each = _.forEach = function (list, iterator, context) {
-    if (!_.isObject(list) || !_.isFunction(iterator)) {
+    if (!_.isFunction(iterator)) {
         throw new TypeError();
     }
 
-    if (_.isFunction(nativeForEach) && list.forEach === nativeForEach) {
+    if (_.isFunction(nativeForEach) && list && list.forEach === nativeForEach) {
         nativeForEach.call(list, iterator, context);
-    } else if (_.isArray(list)) {
+    } else if (list && list.length === +list.length) {
         for (var i = 0; i < list.length; i++) {
             iterator.call(context, list[i], i, list);
         }
@@ -25,10 +25,10 @@ _.each = _.forEach = function (list, iterator, context) {
 
 //15.4.4.19   Array.prototype.map ( callbackfn [ , thisArg ] )
 _.map = _.collect = function (list, iterator, context) {
-    if (!_.isObject(list) || !_.isFunction(iterator)) {
+    if (!_.isFunction(iterator)) {
         throw new TypeError();
     }
-    if (_.isFunction(nativeMap) && list.map === nativeMap) {
+    if (_.isFunction(nativeMap) && list && list.map === nativeMap) {
         return nativeMap.call(list, iterator, context);
     } else {
         var result = [];
