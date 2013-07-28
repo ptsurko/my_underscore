@@ -41,72 +41,69 @@ _.map = _.collect = function (list, iterator, context) {
 
 //15.4.4.21   Array.prototype.reduce ( callbackfn [ , initialValue ] )
 _.reduce = _.foldl = _.inject = function (list, iterator, memo, context) {
-    if (!_.isArray(list) || (+list.length) == 0 || !_.isFunction(iterator)) {
+    if (!_.isFunction(iterator)) {
         throw new TypeError();
+    } else if(_.isEmpty(list)) {
+        if(arguments.length > 2) {
+            return memo;
+        } else {
+            throw new TypeError();
+        };
     }
 
+    var hasInitialValue = arguments.length > 2;
     if (_.isFunction(nativeReduce) && list.reduce === nativeReduce) {
         if (context) iterator = _.bind(iterator, context);
-        return arguments.length > 2 ? nativeReduce.call(list, iterator, memo) : nativeReduce.call(list, iterator);
+        return hasInitialValue ? nativeReduce.call(list, iterator, memo) : nativeReduce.call(list, iterator);
     }
 
-    var result, index = 0, len = list.length;
-    if (arguments.length > 2) {
-        result = memo;
-    } else {
-        while (true) {
-            if (list[index] in list) {
-                result = list[index];
-                break;
-            }
-            if (++index >= len)
-                throw new TypeError();
+    var result = memo, hasValues = false;
+    _.each(list, function (value, key) {
+        if (hasInitialValue) {
+            result = iterator.call(context, result, value, key, list);
+        } else {
+            result = value;
+            hasInitialValue = true;
         }
-    }
-
-    while (index < len) {
-        if (list[index] in list) {
-            result = iterator.call(context, result, list[index], index, list);
-        }
-        index++;
-    }
-
+        hasValues = true;
+    });
+    if (!hasValues) throw new TypeError('Reduce function cannot be called on empty array.');
     return result;
 };
 
 //15.4.4.22   Array.prototype.reduceRight ( callbackfn [ , initialValue ] )
 _.reduceRight = _.foldr = function (list, iterator, memo, context) {
-    if (!_.isArray(list) || (+list.length) == 0 || !_.isFunction(iterator)) {
+    if (!_.isFunction(iterator)) {
         throw new TypeError();
+    } else if(_.isEmpty(list)) {
+        if(arguments.length > 2) {
+            return memo;
+        } else {
+            throw new TypeError();
+        };
     }
 
+    var hasInitialValue = arguments.length > 2;
     if (_.isFunction(nativeReduceRight) && list.reduceRight === nativeReduceRight) {
         if (context) iterator = _.bind(iterator, context);
-        return arguments.length > 2 ? nativeReduceRight.call(list, iterator, memo) : nativeReduceRight.call(list, iterator);
+        return hasInitialValue ? nativeReduceRight.call(list, iterator, memo) : nativeReduceRight.call(list, iterator);
     }
 
-    var result, len = list.length, index = len - 1;
-    if (arguments.length > 2) {
-        result = memo;
-    } else {
-        while (true) {
-            if (list[index] in list) {
-                result = list[index];
-                break;
-            }
-            if (--index == 0)
-                throw new TypeError();
+    var result = memo, hasValues = false;
+    var keys = _.keys(list), length = keys.length - 1;
+    _.each(list, function () {
+        if (hasInitialValue) {
+            result = iterator.call(context, result, list[length], length--, list);
+        } else {
+            result = list[length--];
+            hasInitialValue = true;
         }
-    }
+        hasValues = true;
+    });
 
-    while (index >= 0) {
-        if (list[index] in list) {
-            result = iterator.call(context, result, list[index], index, list);
-        }
-        index--;
-    }
 
-    return _.reduce(list, iterator, memo, context);
+    if (!hasValues) throw new TypeError('ReduceRight function cannot be called on empty array.');
+    return result;
 };
 
 _.find = _.detect = function (list, iterator, context) {
