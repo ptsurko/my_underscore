@@ -13,7 +13,7 @@
 }());
 
 _.isObject = function (obj) {
-	return obj === Object(obj); //TODO:???
+	return obj === Object(obj);
 };
 
 _.isFunction = function (object) {

@@ -3,20 +3,16 @@ _.bind = function (func, object) {
     if (!_.isFunction(func)) {
         throw new TypeError();
     }
-    //    if(nativeBind && func.bind === nativeBind) {
-    //        return nativeBind.apply(func, arrayProto.slice.call(arguments, 1));
-    //    }
+    if(nativeBind && func.bind === nativeBind) {
+        return nativeBind.apply(func, arrayProto.slice.call(arguments, 1));
+    }
 
     var args = arrayProto.slice.call(arguments, 2);
-    return resultFunc = function () {
+    return function () {
         if (!(this instanceof resultFunc)) {
             return func.apply(object, args.concat(arrayProto.slice.call(arguments)));
         }
 
-        //        function tempFunc() { }
-        //        tempFunc.prototype = func.prototype;
-        //        return new tempFunc();
-        //return func.apply({}, args.concat(arrayProto.slice.call(arguments)));
         return void 0;
     };
 };
@@ -32,7 +28,7 @@ _.partial = function (func) {
     };
 };
 
-// memorize?
+
 //TODO: comlete with hash function
 _.memoize = function (func, hashFunc) {
     if (!_.isFunction(func)) {
